@@ -16,6 +16,22 @@ var uiController = (function () {
         },
         getDOMpublic: function () {
             return DOMstrings;
+        },
+        addListItem: function (item, type) {
+
+            var html, list;
+            if (type === 'inc') {
+                list = '.income__list';
+                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">$description$</div><div class="right clearfix"><div class="item__value">%salary%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div ></div > ';
+            }
+            else {
+                list = '.expenses__list';
+                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">$description$</div><div class="right clearfix"><div class="item__value">%salary%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+            }
+            html = html.replace('%id%', item.id);
+            html = html.replace('$description$', item.description);
+            html = html.replace('%salary%', item.value);
+            document.querySelector(list).insertAdjacentHTML('beforeend', html);
         }
     }
 })();
@@ -59,6 +75,8 @@ var financeController = (function () {
                 item = new Expense(id, desc, val);
             }
             data.allitems[type].push(item);
+
+            return item;
         },
         seeData: function () {
             return data;
@@ -69,7 +87,16 @@ var financeController = (function () {
 var appController = (function (uiController, financeController) {
     var ctrlAddItem = function () {
         var input = uiController.getInput();
-        financeController.addItem(input.type, input.description, input.value);
+        var item = financeController.addItem(input.type, input.description, input.value);
+        uiController.addListItem(item, input.type);
+        // console.log(item);
+
+        if (input.type = 0) {
+            alert('uuchlaarai aldaa garlaa');
+        }
+        else {
+            alert('Өгөгдөл амжилттай нэмэгдлээ');
+        }
     };
     var setupEventListeners = function () {
         var DOM = uiController.getDOMpublic();
