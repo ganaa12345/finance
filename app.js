@@ -4,7 +4,9 @@ var uiController = (function () {
         inputType: '.add__type',
         inputDescription: '.add__description',
         inputValue: '.add__value',
-        inputButton: '.add__btn'
+        inputButton: '.add__btn',
+        inputInc: '.income__list',
+        inputExp: '.expenses__list'
     }
     return {
         getInput: function () {
@@ -17,15 +19,26 @@ var uiController = (function () {
         getDOMpublic: function () {
             return DOMstrings;
         },
-        addListItem: function (item, type) {
+        clearFields: function () {
+            var fields = document.querySelectorAll(DOMstrings.inputDescription + ',' + DOMstrings.inputValue);
+            var fieldsArr = Array.prototype.slice.call(fields);
+            fieldsArr.forEach(function (el, index, array) {
+                el.value = "";
 
+            });
+            fieldsArr[0].focus();
+            // for (var i = 0; i < fieldsArr.length; i++) {
+            //     fieldsArr[i].value = "";
+            // }
+        },
+        addListItem: function (item, type) {
             var html, list;
             if (type === 'inc') {
-                list = '.income__list';
+                list = DOMstrings.inputInc;
                 html = '<div class="item clearfix" id="income-%id%"><div class="item__description">$description$</div><div class="right clearfix"><div class="item__value">%salary%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div ></div > ';
             }
             else {
-                list = '.expenses__list';
+                list = DOMstrings.inputExp;
                 html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">$description$</div><div class="right clearfix"><div class="item__value">%salary%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
             }
             html = html.replace('%id%', item.id);
@@ -33,6 +46,7 @@ var uiController = (function () {
             html = html.replace('%salary%', item.value);
             document.querySelector(list).insertAdjacentHTML('beforeend', html);
         }
+
     }
 })();
 // sanhvvgiin model controller
@@ -89,6 +103,7 @@ var appController = (function (uiController, financeController) {
         var input = uiController.getInput();
         var item = financeController.addItem(input.type, input.description, input.value);
         uiController.addListItem(item, input.type);
+        uiController.clearFields();
         // console.log(item);
 
         if (input.type = 0) {
